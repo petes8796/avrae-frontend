@@ -14,7 +14,8 @@ export default function ApplyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true); setError('')
+    setLoading(true)
+    setError('')
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/submit`, {
         method: 'POST',
@@ -25,10 +26,12 @@ export default function ApplyPage() {
       setSubmitted(true)
     } catch (err: any) {
       setError('Something went wrong. Please try again later.')
-    } finally { setLoading(false) }
+    } finally {
+      setLoading(false)
+    }
   }
 
-  if (submitted)
+  if (submitted) {
     return (
       <main className="min-h-screen bg-bg flex items-center justify-center text-center p-6">
         <div>
@@ -37,16 +40,17 @@ export default function ApplyPage() {
         </div>
       </main>
     )
+  }
 
   return (
     <main className="min-h-screen bg-bg text-cream flex items-center justify-center p-6">
       <form onSubmit={handleSubmit} className="w-full max-w-xl space-y-5">
         <h1 className="text-4xl font-serif mb-6 text-center text-gold">Apply to Join</h1>
 
-        {['name','email','occupation','country','networth','reason','socials'].map(key=>(
+        {['name','email','occupation','country','networth','reason','socials'].map(key => (
           <div key={key}>
             <label className="block mb-2 capitalize">{key}</label>
-            {key==='reason' || key==='socials'
+            {key === 'reason' || key === 'socials'
               ? <textarea required name={key} value={(form as any)[key]} onChange={handleChange}
                   className="w-full p-3 bg-transparent border border-gray-600 rounded-md" />
               : <input required name={key} value={(form as any)[key]} onChange={handleChange}
@@ -55,3 +59,14 @@ export default function ApplyPage() {
         ))}
 
         {error && <p className="text-red-500 text-sm">{error}</p>}
+
+        <button
+          disabled={loading}
+          className="w-full py-3 border border-gold text-gold hover:bg-gold hover:text-bg rounded-md transition-all"
+        >
+          {loading ? 'Submitting...' : 'Submit Application'}
+        </button>
+      </form>
+    </main>
+  )
+}
