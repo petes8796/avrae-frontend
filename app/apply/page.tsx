@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, ChangeEvent, FormEvent } from 'react'
 
 export default function ApplyPage() {
   const [form, setForm] = useState({
@@ -9,10 +9,10 @@ export default function ApplyPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm({ ...form, [e.target.name]: e.target.value })
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
     setError('')
@@ -24,7 +24,7 @@ export default function ApplyPage() {
       })
       if (!res.ok) throw new Error('Submission failed')
       setSubmitted(true)
-    } catch (err: any) {
+    } catch {
       setError('Something went wrong. Please try again later.')
     } finally {
       setLoading(false)
@@ -47,14 +47,26 @@ export default function ApplyPage() {
       <form onSubmit={handleSubmit} className="w-full max-w-xl space-y-5">
         <h1 className="text-4xl font-serif mb-6 text-center text-gold">Apply to Join</h1>
 
-        {['name','email','occupation','country','networth','reason','socials'].map(key => (
+        {['name','email','occupation','country','networth','reason','socials'].map((key) => (
           <div key={key}>
             <label className="block mb-2 capitalize">{key}</label>
-            {key === 'reason' || key === 'socials'
-              ? <textarea required name={key} value={(form as any)[key]} onChange={handleChange}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-md" />
-              : <input required name={key} value={(form as any)[key]} onChange={handleChange}
-                  className="w-full p-3 bg-transparent border border-gray-600 rounded-md" />}
+            {key === 'reason' || key === 'socials' ? (
+              <textarea
+                required
+                name={key}
+                value={(form as any)[key]}
+                onChange={handleChange}
+                className="w-full p-3 bg-transparent border border-gray-600 rounded-md"
+              />
+            ) : (
+              <input
+                required
+                name={key}
+                value={(form as any)[key]}
+                onChange={handleChange}
+                className="w-full p-3 bg-transparent border border-gray-600 rounded-md"
+              />
+            )}
           </div>
         ))}
 
@@ -64,7 +76,7 @@ export default function ApplyPage() {
           disabled={loading}
           className="w-full py-3 border border-gold text-gold hover:bg-gold hover:text-bg rounded-md transition-all"
         >
-          {loading ? 'Submitting...' : 'Submit Application'}
+          {loading ? 'Submitting…' : 'Submit Application'}
         </button>
       </form>
     </main>
