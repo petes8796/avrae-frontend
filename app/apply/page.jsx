@@ -18,11 +18,11 @@ export default function ApplyPage() {
     setLoading(true)
     setError('')
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/applications/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      })
+     const response = await fetch("https://api.avrae-society.com/applications/submit", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(formData),
+});
       if (!res.ok) throw new Error('Submission failed')
       setSubmitted(true)
     } catch (err) {
